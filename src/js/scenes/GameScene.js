@@ -16,7 +16,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('sky', 'assets/sky.png');
         this.load.image('ground', 'assets/platform.png');
         this.load.image('star', 'assets/star.png');
-        this.load.image('bomb', 'assets/bomb.png');
+        //this.load.image('bomb', 'assets/bomb.png');
         this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });        
     }
 
@@ -35,7 +35,7 @@ class GameScene extends Phaser.Scene {
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
         });
 
-        this.bombs = this.physics.add.group();
+        //this.bombs = this.physics.add.group();
 
         // create a new map class and create map 1
         this.map = new GameMap(this, this.currentMap);
@@ -73,8 +73,8 @@ class GameScene extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.stars, this.platforms);
-        this.physics.add.collider(this.bombs, this.platforms);
-        this.physics.add.collider(this.player, this.bombs, this.hitBomb, null, this);
+        //this.physics.add.collider(this.bombs, this.platforms);
+        //this.physics.add.collider(this.player, this.bombs, this.hitBomb, null, this);
 
         this.cursors = this.input.keyboard.addKeys({
             up:Phaser.Input.Keyboard.KeyCodes.SPACE,
@@ -113,7 +113,7 @@ class GameScene extends Phaser.Scene {
         } else {
             if(this.cursors.reset.isDown) {                
                 this.setScore(0);
-                this.resetBombs();
+                //this.resetBombs();
                 this.resetStars();
 
                 this.player.setTint(0xFFFFFF);
@@ -130,7 +130,8 @@ class GameScene extends Phaser.Scene {
     collectStar(player, star) {
         star.disableBody(true, true);
 
-        this.addToScore(10);
+        // add a random value between 5 and 20 to the score
+        this.addToScore(Phaser.Math.Between(5, 20));
 
         if(this.stars.countActive(true) === 0) {
             this.resetStars();
@@ -138,26 +139,26 @@ class GameScene extends Phaser.Scene {
 
             var x = (this.player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
-            var bomb = this.bombs.create(x, 16, 'bomb');
-            bomb.setBounce(1);
-            bomb.setCollideWorldBounds(true);
-            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+            //var bomb = this.bombs.create(x, 16, 'bomb');
+            //bomb.setBounce(1);
+            //bomb.setCollideWorldBounds(true);
+            //bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
 
             this.scene.restart();
         }
     }
 
-    hitBomb (player, bomb) {
-        this.physics.pause();
+    // hitBomb (player, bomb) {
+    //     this.physics.pause();
 
-        this.player.setTint(0xff0000);
+    //     this.player.setTint(0xff0000);
 
-        this.player.anims.play('turn');
+    //     this.player.anims.play('turn');
 
-        this.gameOver = true;
-        this.gameoverText.setText(`GAME OVER SCORE: ${this.score}`);
-        this.resetText.setText("Press 'R' to reset");
-    }
+    //     this.gameOver = true;
+    //     this.gameoverText.setText(`GAME OVER SCORE: ${this.score}`);
+    //     this.resetText.setText("Press 'R' to reset");
+    // }
 
     resetStars() {
         this.stars.children.iterate(function(child) {
@@ -165,12 +166,12 @@ class GameScene extends Phaser.Scene {
         });
     }
 
-    resetBombs() {
-        this.bombs.children.iterate(function(bomb) {
-            bomb.disableBody(true, true);
-            //delete bomb;
-        });
-    }
+    // resetBombs() {
+    //     this.bombs.children.iterate(function(bomb) {
+    //         bomb.disableBody(true, true);
+    //         //delete bomb;
+    //     });
+    // }
 
     setScore(newScore) {
         this.score = newScore;
