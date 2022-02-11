@@ -2,8 +2,8 @@ class GameScene extends Phaser.Scene {
     constructor() {
         super('Game');    
         
-        this.score = 0;
-        this.scoreText;
+        this.currency = 0;
+        this.currencyText;
         this.gameOver = false;
         this.gameoverText;
         this.resetText;
@@ -16,7 +16,6 @@ class GameScene extends Phaser.Scene {
         this.load.image('sky', 'assets/sky.png');
         this.load.image('ground', 'assets/platform.png');
         this.load.image('star', 'assets/star.png');
-        //this.load.image('bomb', 'assets/bomb.png');
         this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });        
     }
 
@@ -34,8 +33,6 @@ class GameScene extends Phaser.Scene {
         this.stars.children.iterate(function(child) {
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
         });
-
-        //this.bombs = this.physics.add.group();
 
         // create a new map class and create map 1
         this.map = new GameMap(this, this.currentMap);
@@ -73,8 +70,6 @@ class GameScene extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.stars, this.platforms);
-        //this.physics.add.collider(this.bombs, this.platforms);
-        //this.physics.add.collider(this.player, this.bombs, this.hitBomb, null, this);
 
         this.cursors = this.input.keyboard.addKeys({
             up:Phaser.Input.Keyboard.KeyCodes.SPACE,
@@ -84,7 +79,7 @@ class GameScene extends Phaser.Scene {
             reset:Phaser.Input.Keyboard.KeyCodes.R 
         });
 
-        this.scoreText = this.add.text(16, 16, `score: ${this.score}`, { fontSize: '32px', fill: '#000' });
+        this.currencyText = this.add.text(16, 16, `money: \$ ${this.currency}`, { fontSize: '32px', fill: '#000' });
         this.gameoverText = this.add.text(16, 300, '', { fontSize: '64px', fill: '#000' });
         this.resetText = this.add.text(16, 375, "", { fontSize: '32px', fill: '#000' });
     }
@@ -139,26 +134,9 @@ class GameScene extends Phaser.Scene {
 
             var x = (this.player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
-            //var bomb = this.bombs.create(x, 16, 'bomb');
-            //bomb.setBounce(1);
-            //bomb.setCollideWorldBounds(true);
-            //bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-
             this.scene.restart();
         }
     }
-
-    // hitBomb (player, bomb) {
-    //     this.physics.pause();
-
-    //     this.player.setTint(0xff0000);
-
-    //     this.player.anims.play('turn');
-
-    //     this.gameOver = true;
-    //     this.gameoverText.setText(`GAME OVER SCORE: ${this.score}`);
-    //     this.resetText.setText("Press 'R' to reset");
-    // }
 
     resetStars() {
         this.stars.children.iterate(function(child) {
@@ -166,20 +144,13 @@ class GameScene extends Phaser.Scene {
         });
     }
 
-    // resetBombs() {
-    //     this.bombs.children.iterate(function(bomb) {
-    //         bomb.disableBody(true, true);
-    //         //delete bomb;
-    //     });
-    // }
-
     setScore(newScore) {
-        this.score = newScore;
-        this.scoreText.setText(`Score: ${newScore}`);
+        this.currency = newScore;
+        this.currencyText.setText(`Money: \$ ${newScore}`);
     }
 
     addToScore(value) {
-        this.score += value;
-        this.scoreText.setText(`Score: ${this.score}`);
+        this.currency += value;
+        this.currencyText.setText(`Money: \$ ${this.currency}`);
     }
 }
